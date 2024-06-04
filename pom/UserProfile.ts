@@ -24,8 +24,8 @@ export class UserProfile {
         await this.page.goto(this.baseURL + `/web/index.php/pim/viewMemberships/empNumber/${userId}`)
     }
 
-    async addAttachement(attachementFile: string){
-        console.log(`Attach file: ${attachementFile}`)
+    async addAttachment(attachmentFile: string){
+        console.log(`Attach file: ${attachmentFile}`)
         await this.personalDetailsAddAttachement.click();
 
         let [fileChooser] = await Promise.all([         // Using fileChooser due to attachement at dymanic element not input.
@@ -35,12 +35,12 @@ export class UserProfile {
             this.browseBtn.click()
           ]);
     
-          await fileChooser.setFiles(attachementFile);
+          await fileChooser.setFiles(attachmentFile);
     }
 
-    async addAttachementAndSave(attachementFile: string){
+    async addAttachmentAndSave(attachmentFile: string){
 
-        await this.addAttachement(attachementFile);
+        await this.addAttachment(attachmentFile);
         
         await this.saveAttachement.click();
     }
