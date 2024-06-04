@@ -3,27 +3,30 @@ import playwrightConfig from '../playwright.config';
 import { Login } from '../pom/Login';
 import { Home } from '../pom/Home';
 import { UserProfile } from '../pom/UserProfile';
+const path = require('path');
 
-test.describe.configure({ retries: 2 });
 test.describe('UserProfile', async() => {
 
     let page: Page;
     let login: Login;
     let home: Home;
     let userProfile: UserProfile;
+    var homeUserName
 
     test('Verify on the user name', async() => {
-
-        var homeUserName = await home.getUserName();
-        await home.openMyInfo();
 
         await expect(userProfile.user_name).toHaveText(homeUserName);
     });
 
-    // test('Verify the user can logout successfully', async() => {
+    test('Add attachement to personal details', async() => {
+
+        // Error: fileChooser.setFiles: ENOENT: no such file or directory, access 'D:\MR\Learn\Projects\Playwright-Auto\resources\images\test_image.png'
+        // [SOLVED]: Right click on file and copy relative path
+        await userProfile.addAttachementAndSave('resources\\Images\\test_images.png');
+        await expect(userProfile.uploadedFileName).toHaveText('test_images.png');
         
-    //     await home.logout();
-    // });
+        page.waitForEvent('close');
+    });
 
     test.beforeAll('BeforeAll', async({ browser }, testInfo) => {
         page = await browser.newPage();     //Reuse single page between tests  ->  https://playwright.dev/docs/test-retries#reuse-single-page-between-tests
@@ -35,6 +38,9 @@ test.describe('UserProfile', async() => {
 
         login.goto();
         await login.login('Admin', 'admin123');
+
+        homeUserName = await home.getUserName();
+        await home.openMyInfo();
     });
 
     test.afterAll('AfterAll', async() => {
