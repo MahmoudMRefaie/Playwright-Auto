@@ -4,20 +4,21 @@ export class UserProfile {
     readonly page: Page;
     readonly baseURL: string;
     readonly user_name: Locator;
-    readonly personalDetailsAddAttachement: Locator;
+    readonly personalDetailsAddAttachment: Locator;
     readonly browseBtn: Locator;
     readonly uploadedFileName: Locator;
-    readonly saveAttachement: Locator;
+    readonly saveAttachment: Locator;
+    readonly countrySelection: Locator;
 
     constructor(page: Page, baseURL?: string) {
         this.page = page;
         this.baseURL = baseURL ?? '/';
         this.user_name = page.locator("[class='orangehrm-edit-employee-name'] h6");
-        this.personalDetailsAddAttachement = page.locator("[class='oxd-button oxd-button--medium oxd-button--text']")
+        this.personalDetailsAddAttachment = page.locator("[class='oxd-button oxd-button--medium oxd-button--text']")
         this.browseBtn = page.locator("[class='oxd-file-button']")
         this.uploadedFileName = page.locator('.oxd-file-input-div')
-        this.saveAttachement = page.locator('.orangehrm-attachment [type="submit"]')
-
+        this.saveAttachment = page.locator('.orangehrm-attachment [type="submit"]')
+        this.countrySelection = page.locator('.oxd-select-wrapper');
     }
 
     async goto(userId: string) {
@@ -26,7 +27,7 @@ export class UserProfile {
 
     async addAttachment(attachmentFile: string){
         console.log(`Attach file: ${attachmentFile}`)
-        await this.personalDetailsAddAttachement.click();
+        await this.personalDetailsAddAttachment.click();
 
         let [fileChooser] = await Promise.all([         // Using fileChooser due to attachement at dymanic element not input.
             // It is important to call waitForEvent before click to set up waiting.
@@ -42,7 +43,14 @@ export class UserProfile {
 
         await this.addAttachment(attachmentFile);
         
-        await this.saveAttachement.click();
+        await this.saveAttachment.click();
+    }
+
+    async selectCountry(countryName: string){
+
+        await this.countrySelection.click()
+        await this.page.pause();
+        await this.page.locator('.oxd-select.dropdown , [role=listbox]').getByText(countryName);
     }
 
 

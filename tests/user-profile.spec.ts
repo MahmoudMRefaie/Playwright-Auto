@@ -21,10 +21,15 @@ test.describe('UserProfile', async() => {
     test('Add attachment to personal details', async() => {
 
         // Error: fileChooser.setFiles: ENOENT: no such file or directory, access 'D:\MR\Learn\Projects\Playwright-Auto\resources\images\test_image.png'
-        // [SOLVED]: Right click on file and copy relative path
-        // await userProfile.addAttachmentAndSave('.\\resources\\Images\\test_images.png');
+        // [SOLVED]: Using path.resolve
         await userProfile.addAttachmentAndSave(path.resolve(__dirname ,'../resources/Images/test_images.png'));
         await expect(userProfile.uploadedFileName).toHaveText('test_images.png');
+    });
+
+    test('Edit country at Contact details', async() => {
+
+        await userProfile.selectCountry('Egypt');
+
     });
 
     test.beforeAll('BeforeAll', async({ browser }, testInfo) => {
@@ -35,7 +40,7 @@ test.describe('UserProfile', async() => {
         home = new Home(page, testInfo, baseURL);
         userProfile = new UserProfile(page, baseURL);
 
-        login.goto();
+        await login.goto();
         await login.login('Admin', 'admin123');
 
         homeUserName = await home.getUserName();
@@ -43,7 +48,7 @@ test.describe('UserProfile', async() => {
     });
 
     test.afterAll('AfterAll', async() => {
-        page.close()
+        await page.close()
     })
 
 });
