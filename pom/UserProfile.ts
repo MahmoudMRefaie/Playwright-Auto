@@ -9,6 +9,10 @@ export class UserProfile {
     readonly uploadedFileName: Locator;
     readonly saveAttachment: Locator;
     readonly countrySelection: Locator;
+    readonly infoPageItems: Locator;
+    readonly contactDetailsTab: Locator;
+    readonly saveContactDetailsBtn: Locator;
+    readonly savedSuccessfullyMessage: Locator;
 
     constructor(page: Page, baseURL?: string) {
         this.page = page;
@@ -19,6 +23,10 @@ export class UserProfile {
         this.uploadedFileName = page.locator('.oxd-file-input-div')
         this.saveAttachment = page.locator('.orangehrm-attachment [type="submit"]')
         this.countrySelection = page.locator('.oxd-select-wrapper');
+        this.infoPageItems = page.locator('.orangehrm-tabs');
+        this.contactDetailsTab = this.infoPageItems.getByText('Contact Details');
+        this.saveContactDetailsBtn = page.locator('.orangehrm-horizontal-padding [type="submit"]');
+        this.savedSuccessfullyMessage = page.getByText('Successfully Updated')
     }
 
     async goto(userId: string) {
@@ -29,7 +37,7 @@ export class UserProfile {
         console.log(`Attach file: ${attachmentFile}`)
         await this.personalDetailsAddAttachment.click();
 
-        let [fileChooser] = await Promise.all([         // Using fileChooser due to attachement at dymanic element not input.
+        let [fileChooser] = await Promise.all([         // Using fileChooser due to attachment at dynamic element not input.
             // It is important to call waitForEvent before click to set up waiting.
             this.page.waitForEvent('filechooser'),
             // Opens the file chooser.
@@ -46,11 +54,20 @@ export class UserProfile {
         await this.saveAttachment.click();
     }
 
+    async openContactDetailsTab(){
+
+        await this.contactDetailsTab.click()
+    }
+
     async selectCountry(countryName: string){
 
         await this.countrySelection.click()
-        await this.page.pause();
-        await this.page.locator('.oxd-select.dropdown , [role=listbox]').getByText(countryName);
+        await this.page.getByRole('option', { name: countryName }).click();
+    }
+
+    async saveContactDetails(){
+
+        await this.saveContactDetailsBtn.click()
     }
 
 

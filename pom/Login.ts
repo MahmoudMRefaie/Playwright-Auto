@@ -21,7 +21,7 @@ export class Login {
 
     async login(username: string, password: string) {
         console.log(`Login with username [${username}] and password [${password}]`);
-        await this.usernameInput.pressSequentially(username);
+        await this.usernameInput.fill(username);
         await this.passwordInput.fill(password); 
         await this.loginBtn.click();
     }

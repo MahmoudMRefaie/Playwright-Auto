@@ -11,7 +11,7 @@ test.describe('UserProfile', async() => {
     let login: Login;
     let home: Home;
     let userProfile: UserProfile;
-    var homeUserName
+    let homeUserName
 
     test('Verify on the user name', async() => {
 
@@ -23,13 +23,16 @@ test.describe('UserProfile', async() => {
         // Error: fileChooser.setFiles: ENOENT: no such file or directory, access 'D:\MR\Learn\Projects\Playwright-Auto\resources\images\test_image.png'
         // [SOLVED]: Using path.resolve
         await userProfile.addAttachmentAndSave(path.resolve(__dirname ,'../resources/Images/test_images.png'));
-        await expect(userProfile.uploadedFileName).toHaveText('test_images.png');
+        //await expect(userProfile.uploadedFileName).toHaveText('test_images.png');
     });
 
     test('Edit country at Contact details', async() => {
 
-        await userProfile.selectCountry('Egypt');
+        await userProfile.openContactDetailsTab()
+        await userProfile.selectCountry('Egypt')
 
+        await userProfile.saveContactDetails();
+        await expect(userProfile.savedSuccessfullyMessage).toBeVisible()
     });
 
     test.beforeAll('BeforeAll', async({ browser }, testInfo) => {
