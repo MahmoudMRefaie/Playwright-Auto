@@ -4,10 +4,13 @@ import { Login } from '../pom/Login';
 import { Home } from '../pom/Home';
 import { UserProfile } from '../pom/UserProfile';
 import path = require('path');
+import { JobTab } from '../pom/JobTab';
+import { ContentDetailsTab } from '../pom/ContentDetailsTab';
 
 test.describe('UserProfile', async() => {
 
     let page: Page;
+    let baseURL;
     let login: Login;
     let home: Home;
     let userProfile: UserProfile;
@@ -26,19 +29,30 @@ test.describe('UserProfile', async() => {
         //await expect(userProfile.uploadedFileName).toHaveText('test_images.png');
     });
 
-    test('Edit country at Contact details', async() => {
+    test.only('Select country at Contact details', async() => {
 
         await userProfile.openContactDetailsTab()
-        await userProfile.selectCountry('Egypt')
 
-        await userProfile.saveContactDetails();
-        await expect(userProfile.savedSuccessfullyMessage).toBeVisible()
+        const contentDetails = new ContentDetailsTab(page, baseURL)
+        await contentDetails.selectCountry('Egypt')
+
+        await contentDetails.saveContactDetails();
+        await expect(contentDetails.savedSuccessfullyMessage).toBeVisible()
+    });
+    
+    test('Verify job details', async() => {
+
+        const jobTab = new JobTab(page, baseURL);
+        await jobTab.openJobTab()
+
+        await expect(page.getByText("HR Manager")).toBeVisible()
+        await expect(page.getByText('Officials and Managers')).toBeVisible()
     });
 
     test.beforeAll('BeforeAll', async({ browser }, testInfo) => {
         page = await browser.newPage();     //Reuse single page between tests  ->  https://playwright.dev/docs/test-retries#reuse-single-page-between-tests
         
-        let baseURL = playwrightConfig.use?.baseURL
+        baseURL = playwrightConfig.use?.baseURL
         login = new Login(page, baseURL);
         home = new Home(page, testInfo, baseURL);
         userProfile = new UserProfile(page, baseURL);
