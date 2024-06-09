@@ -11,8 +11,8 @@ export class UserProfile {
     readonly countrySelection: Locator;
     readonly infoPageItems: Locator;
     readonly contactDetailsTab: Locator;
-    readonly saveContactDetailsBtn: Locator;
     readonly savedSuccessfullyMessage: Locator;
+    readonly jobTab: Locator;
 
     constructor(page: Page, baseURL?: string) {
         this.page = page;
@@ -24,9 +24,9 @@ export class UserProfile {
         this.saveAttachment = page.locator('.orangehrm-attachment [type="submit"]')
         this.countrySelection = page.locator('.oxd-select-wrapper');
         this.infoPageItems = page.locator('.orangehrm-tabs');
-        this.contactDetailsTab = this.infoPageItems.getByText('Contact Details');
-        this.saveContactDetailsBtn = page.locator('.orangehrm-horizontal-padding [type="submit"]');
         this.savedSuccessfullyMessage = page.getByText('Successfully Updated')
+        this.contactDetailsTab = this.infoPageItems.getByText('Contact Details');
+        this.jobTab = this.infoPageItems.getByText('Job');
     }
 
     async goto(userId: string) {
@@ -57,17 +57,6 @@ export class UserProfile {
     async openContactDetailsTab(){
 
         await this.contactDetailsTab.click()
-    }
-
-    async selectCountry(countryName: string){
-
-        await this.countrySelection.click()
-        await this.page.getByRole('option', { name: countryName }).click();
-    }
-
-    async saveContactDetails(){
-
-        await this.saveContactDetailsBtn.click()
     }
 
 
