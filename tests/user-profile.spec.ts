@@ -29,7 +29,7 @@ test.describe('UserProfile', async() => {
         //await expect(userProfile.uploadedFileName).toHaveText('test_images.png');
     });
 
-    test.only('Select country at Contact details', async() => {
+    test('Select country at Contact details', async() => {
 
         await userProfile.openContactDetailsTab()
 
