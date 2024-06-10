@@ -54,8 +54,8 @@ export class UserProfile {
         await this.saveAttachment.click();
     }
 
-    async openContactDetailsTab(){
-
+    async openContentDetailsTab(){
+        console.log("Open Content Details Tab")
         await this.contactDetailsTab.click()
     }
 

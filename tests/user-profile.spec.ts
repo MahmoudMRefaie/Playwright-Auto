@@ -1,4 +1,4 @@
-import { test, expect, Page, chromium, firefox } from '@playwright/test';
+import { test, expect, Page, Browser } from '@playwright/test';
 import playwrightConfig from '../playwright.config';
 import { Login } from '../pom/Login';
 import { Home } from '../pom/Home';
@@ -9,6 +9,7 @@ import { ContentDetailsTab } from '../pom/ContentDetailsTab';
 
 test.describe('UserProfile', async() => {
 
+    let browser: Browser;
     let page: Page;
     let baseURL;
     let login: Login;
@@ -31,7 +32,7 @@ test.describe('UserProfile', async() => {
 
     test('Select country at Contact details', async() => {
 
-        await userProfile.openContactDetailsTab()
+        await userProfile.openContentDetailsTab()
 
         const contentDetails = new ContentDetailsTab(page, baseURL)
         await contentDetails.selectCountry('Egypt')
@@ -49,7 +50,8 @@ test.describe('UserProfile', async() => {
         await expect(page.getByText('Officials and Managers')).toBeVisible()
     });
 
-    test.beforeAll('BeforeAll', async({ browser }, testInfo) => {
+    test.beforeAll('BeforeAll', async({ browser: testBrowser }, testInfo) => {
+        browser = testBrowser
         page = await browser.newPage();     //Reuse single page between tests  ->  https://playwright.dev/docs/test-retries#reuse-single-page-between-tests
         
         baseURL = playwrightConfig.use?.baseURL
@@ -66,6 +68,7 @@ test.describe('UserProfile', async() => {
 
     test.afterAll('AfterAll', async() => {
         await page.close()
+        await browser.close()
     })
 
 });

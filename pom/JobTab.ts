@@ -5,6 +5,7 @@ export class JobTab extends UserProfile {
 
     async openJobTab(){
 
+        console.log("Open Job tab")
         await this.jobTab.click()
     }
 }
