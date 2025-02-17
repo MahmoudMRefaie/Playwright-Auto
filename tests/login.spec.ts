@@ -2,6 +2,7 @@ import { test, expect, Page, chromium, firefox } from '@playwright/test';
 import playwrightConfig from '../playwright.config';
 import { Login } from '../pom/Login';
 import { Home } from '../pom/Home';
+import { authenticateAPI } from '../setup/auth-setup';
 
 /* test.describe.serial: Declares a group of tests that should always be run serially.
    If one of the tests fails, all subsequent tests are skipped. All tests in a group are retried together.
@@ -26,12 +27,14 @@ test.describe.serial('Login', async() => {
         await home.logout();
     });
 
-    test.beforeAll('BeforeAll', async({ browser }, testInfo) => {
+    test.beforeAll('BeforeAll', async({ browser, request }, testInfo) => {
         page = await browser.newPage();     //Reuse single page between tests  ->  https://playwright.dev/docs/test-retries#reuse-single-page-between-tests
 
         let baseURL = playwrightConfig.use?.baseURL
         login = new Login(page, baseURL);
         home = new Home(page, testInfo, baseURL);
+
+        await authenticateAPI(request);
     });
 
     test.afterAll('AfterAll', async() => {
