@@ -10,6 +10,7 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  globalSetup: require.resolve('./setup/global-setup'),  // to use stored-authentication
   testDir: './tests',
   /* Maximum time one test can run for. */
   timeout: 50 * 1000,
@@ -47,6 +48,8 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    //stored-authentication
+    storageState: './setup/storageState.json'
   },
 
   /* Configure projects for major browsers */
